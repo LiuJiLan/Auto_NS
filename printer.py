@@ -10,14 +10,17 @@ class Printer:
         self.array = array
 
     def main(self):
-        self.plan_path()
+        # self.plan_path()
+        print("Planned")
+
+        self.draw2()
 
         try:
-            self.draw()
+            self.draw2()
         except Exception as e:
-            np.savetxt("./fail.csv", self.array, delimiter=",", fmt='%d')
-        finally:
-            exit()
+            print(e)
+            np.savetxt("./crash.csv", self.array, delimiter=",", fmt='%d')
+            raise e
 
     def draw(self):
         prev_dot = Dot(0, 0)
@@ -26,6 +29,29 @@ class Printer:
             self.mark(dot)
             self.print()
             prev_dot = dot
+
+    def draw2(self):
+        prev_dot = Dot(0, 0)
+
+        cnt = 0
+
+        while True:
+            if 0 not in self.array:
+                return
+
+            tar_dot = self.find_nearest(prev_dot, self.array)
+            self.move(prev_dot, tar_dot)
+            self.print()
+            self.mark(tar_dot)
+            prev_dot = tar_dot
+
+            cnt += 1
+            if cnt > 10:
+                cnt = 0
+                self.auto_save()
+
+    def auto_save(self):
+        np.savetxt("./auto_save.csv", self.array, delimiter=",", fmt='%d')
 
     def plan_path(self):
         array = np.array(self.array, dtype="int8")
@@ -41,7 +67,7 @@ class Printer:
             cur_dot = next_dot
 
     def find_nearest(self, dot, array):
-        if self.array[dot.y, dot.x] == 0:
+        if array[dot.y, dot.x] == 0:
             return dot
 
         dist = np.zeros(shape=array.shape, dtype='float')
@@ -53,7 +79,8 @@ class Printer:
                     dist[y, x] = MAX_DISTENCE
 
         nearest_y, nearest_x = np.where(dist == np.min(dist))
-        return Dot(nearest_x, nearest_y)
+
+        return Dot(int(nearest_x), int(nearest_y))
 
     def move(self, prev, tar):
         delta_x = tar.x - prev.x
@@ -72,11 +99,11 @@ class Printer:
 
         if delta_y > 0:
             for _ in range(delta_y):
-                self.move_u()
+                self.move_d()
         else:
             delta_y = abs(delta_y)
             for _ in range(delta_y):
-                self.move_d()
+                self.move_u()
 
     def mark(self, dot):
         self.array[dot.y, dot.x] = 1
@@ -111,9 +138,14 @@ class Dot:
         vec_y = self.y - y
         # y要反转, 因为是向下生长的
 
-        # 顺时针旋转90度, 但是y反转所以逆时针90
+        # 顺时针旋转90度, 但是y反转所以转180度, 反而是逆时针90
         v_x_ = -vec_y  # v_x_ => Vec x'
         v_y_ = vec_x
-        perfer = (math.atan2(v_y_, v_x_) + math.pi) / math.pi / 2
+
+        # 但是由于0会映射到2π上去, 所以要多写个if
+        if vec_x == 0 and vec_y > 0:
+            perfer = 0
+        else:
+            perfer = (math.atan2(v_y_, v_x_) + math.pi) / math.pi / 2
 
         return abs(vec_x) + abs(vec_y) + perfer

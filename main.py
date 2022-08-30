@@ -6,7 +6,7 @@ from controller import Controller
 
 
 def save_picture_as_text():
-    im = Image.open("./default.png")
+    im = Image.open("./img/test_08.png")
     im = im.convert("1")
     # im.show()
     im_array = np.array(im)
@@ -23,66 +23,34 @@ def limit_shape(im):
     return im[:y, :x]
 
 
-def load_pic_from_text():
-    im_array = np.genfromtxt("./pic_text.csv", delimiter=',').astype(np.uint8)
+def load_pic_from_text(path="./pic_text.csv"):
+    im_array = np.genfromtxt(path, delimiter=',').astype(np.uint8)
     Image.fromarray(im_array * 255).show()
     return im_array
 
 
-def draw(im, ctr):
-    shape_y, shape_x = im.shape
-    for y in range(int(shape_y / 2)):
-        x = 0
+from printer import Printer
 
-        while x < shape_x:
-            if im[2 * y, x] == 0:
-                ctr.A()
-            x += 1
-            if x < shape_x:
-                ctr.r()
 
-        ctr.d()
+class NSPrinter(Printer):
+    def __init__(self, im, ctr):
+        super(NSPrinter, self).__init__(im)
+        self.ctr = ctr
 
-        print(2 * y)
+    def move_u(self):
+        self.ctr.u()
 
-        while x > 0:
-            x -= 1
-            if im[2 * y + 1, x] == 0:
-                ctr.A()
-            if x != 0:
-                ctr.l()
+    def move_d(self):
+        self.ctr.d()
 
-        ctr.d()
+    def move_l(self):
+        self.ctr.l()
 
-        print(2 * y + 1)
+    def move_r(self):
+        self.ctr.r()
 
-    ctr.p()
-
-def draw2(im, ctr):
-    shape_y, shape_x = im.shape
-    for y in range(41, int(shape_y / 2)):
-        x = 0
-
-        while x < shape_x:
-            if im[2 * y, x] == 0:
-                ctr.A()
-            x += 1
-            if x < shape_x:
-                ctr.r()
-
-        ctr.d()
-
-        while x > 0:
-            x -= 1
-            if im[2 * y + 1, x] == 0:
-                ctr.A()
-            if x != 0:
-                ctr.l()
-
-        ctr.d()
-
-    ctr.B()
-    #ctr.p()
+    def print(self):
+        self.ctr.A()
 
 
 def prepare(ctr_ins):
@@ -95,29 +63,27 @@ def prepare(ctr_ins):
 
 
 if __name__ == '__main__':
-    # ctr = Controller()
-    #ctr.LR(5)
-    #ctr.A()
-    #ctr.h()
+    ctr = Controller()
+    # ctr.LR(5)
+    # ctr.A()
+    # ctr.h()
 
-    #ctr.B()
-    #save_picture_as_text()
-    # im = load_pic_from_text()
+    # ctr.L()
+    # ctr.m()
+    # ctr.l(1)
+    # ctr.u(1)
+
+
+    # ctr.B()
+    # save_picture_as_text()
+    im = load_pic_from_text("./auto_save.csv")
 
     #
     # prepare(ctr)
-    #test_im = im_array = np.asarray([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]], dtype='int8')
-    #draw(test_im, ctr)
+    # test_im = im_array = np.asarray([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]], dtype='int8')
 
-    # draw(im, ctr)
-    #draw2(im, ctr)
+    prt = NSPrinter(im, ctr)
+    prt.main()
+
+
     pass
-
-    from printer import Dot
-
-    dot = Dot(2, 2)
-
-    for y in range(5):
-        for x in range(5):
-            print(x, ", ", y, " : ", end="")
-            print(dot.dist(x, y))

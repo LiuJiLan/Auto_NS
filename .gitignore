@@ -3,3 +3,6 @@
 venv/
 __pycache__/
 .idea/
+img/
+auto_save.csv
+pic_text.csv
