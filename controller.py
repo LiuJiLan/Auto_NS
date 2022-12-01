@@ -28,26 +28,26 @@ class Controller:
         return ports
 
     def write(self,msg):
-        self.ser.write(f'{msg}\r\n'.encode('utf-8'));
+        self.ser.write(f'{msg}\r\n'.encode('utf-8'))
 
     def release(self):
-        self.ser.write(b'RELEASE\r\n');
+        self.ser.write(b'RELEASE\r\n')
 
     # Negative or zero duration to hold the button
     def send(self, msg, duration = 0.1):
         if self.printout:
             print(msg)
-        self.write(msg);
+        self.write(msg)
         if duration > 0:
             sleep(duration)
-            self.release();
+            self.release()
             sleep(self.buttondelay)
 
     def pause(self,duration):
         sleep(duration)
 
     def close(self):
-        self.release();
+        self.release()
         sleep(0.5)
         self.ser.close()
         print('Connection closed!')

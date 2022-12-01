@@ -6,3 +6,7 @@ __pycache__/
 img/
 auto_save.csv
 pic_text.csv
+pyvenv.cfg
+bin/
+lib/
+share/

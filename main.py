@@ -5,8 +5,8 @@ import matplotlib.pyplot as plt
 from controller import Controller
 
 
-def save_picture_as_text():
-    im = Image.open("./img/test_08.png")
+def save_picture_as_text(path="./img/test_08.png"):
+    im = Image.open(path)
     im = im.convert("1")
     # im.show()
     im_array = np.array(im)
@@ -63,8 +63,8 @@ def prepare(ctr_ins):
 
 
 if __name__ == '__main__':
-    ctr = Controller()
-    # ctr.LR(5)
+    # ctr = Controller()
+    # ctr.LR()
     # ctr.A()
     # ctr.h()
 
@@ -73,17 +73,17 @@ if __name__ == '__main__':
     # ctr.l(1)
     # ctr.u(1)
 
-
     # ctr.B()
-    # save_picture_as_text()
-    im = load_pic_from_text("./auto_save.csv")
+    # save_picture_as_text("./img/test_08.png")
+    # im = load_pic_from_text("./auto_save.csv")
+    im = load_pic_from_text()
 
     #
     # prepare(ctr)
     # test_im = im_array = np.asarray([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]], dtype='int8')
 
-    prt = NSPrinter(im, ctr)
-    prt.main()
-
+    # prt = NSPrinter(im, ctr)
+    # prt.main()
+    # ctr.m()
 
     pass
