@@ -4,6 +4,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 from controller import Controller
 
+from time import sleep
+
+
 
 def save_picture_as_text(path="./img/test_08.png"):
     im = Image.open(path)
@@ -62,7 +65,22 @@ def prepare(ctr_ins):
     ctr_ins.ls_u(5)
 
 
-if __name__ == '__main__':
+def zhandi():
+    ctr = Controller()
+
+    # ctr.LR()
+    # ctr.A()
+
+    while True:
+        ctr.d()
+        ctr.d()
+        ctr.A()
+        ctr.A()
+        ctr.B()
+        sleep(3)
+
+
+def draw_splatoon3_pic():
     # ctr = Controller()
     # ctr.LR()
     # ctr.A()
@@ -86,4 +104,37 @@ if __name__ == '__main__':
     # prt.main()
     # ctr.m()
 
+def test():
+    im = Image.open("./img/test_08.png")
+    im_array = np.array(im)
+    print(im_array.shape)
+    Image.fromarray(im_array).show()
+    im_array[:, :, 3] = im_array[:, :, 3] / 2
+    Image.fromarray(im_array).show()
+
+
+
+if __name__ == '__main__':
+    #zhandi()
+    # im = Image.open("/Users/liujilan/Desktop/吃粑粑的小熊猫.png")
+    # im_np = np.array(im)
+    # Image.fromarray(im_np).show()
+    #
+    # musk_np = np.zeros(im_np.shape, dtype=np.uint8)
+    # musk_np[155:220, 250:855] = 1
+    # Image.fromarray(musk_np * 255).show()
+    #
+    # new_np = im_np * musk_np
+    #
+    # Image.fromarray(new_np).show()
+
+    # ctr = Controller()
+    # ctr.h()
+    # while True:
+    #     #ctr.A()
+    #     pass
+
+    test()
+
     pass
+
